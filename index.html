@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>NFC Maps QR</title>
+  <script defer src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    nfc-save, nfc-reset {
+      display: inline-block;
+      margin: 15px;
+      padding: 12px 20px;
+      background: #007BFF;
+      color: white;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    nfc-reset {
+      background: #dc3545;
+    }
+
+    #qrcode {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>NFC Position Saver + QR</h2>
+
+<nfc-save>Salva posizione / Apri Maps</nfc-save>
+<nfc-reset>Reset posizione</nfc-reset>
+
+<div id="qrcode"></div>
+
+</body>
+</html>
