@@ -1,17 +1,57 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <title>Reset Posizione</title>
+<meta charset="UTF-8">
+<title>Reset invisibile</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent; /* trasparente */
+    height: 100%;
+    width: 100%;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+  }
+
+  /* Messaggio opzionale in basso centro */
+  .message {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    opacity: 0;
+    animation: fadeInOut 2s forwards;
+  }
+
+  @keyframes fadeInOut {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+</style>
 </head>
 <body>
+
+<div class="message">Sei in macchina</div>
 
 <script>
 const STORAGE_KEY = "savedLocation";
 
+// Cancella la posizione
 localStorage.removeItem(STORAGE_KEY);
 
-document.body.innerHTML = "<h2>Sei in macchina</h2>";
+// Opzionale: reindirizza a una pagina neutra dopo 1.5-2 secondi
+setTimeout(() => {
+  // Su iOS non si può chiudere automaticamente, quindi facciamo redirect invisibile
+  window.location.href = "about:blank";
+}, 1800);
 </script>
 
 </body>
