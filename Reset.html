@@ -7,26 +7,28 @@
   html, body {
     margin: 0;
     padding: 0;
-    background: transparent; /* trasparente */
+    background: transparent; /* sfondo trasparente */
     height: 100%;
     width: 100%;
     font-family: Arial, sans-serif;
     overflow: hidden;
   }
 
-  /* Messaggio opzionale in basso centro */
+  /* Messaggio leggibile in basso centro */
   .message {
     position: fixed;
-    bottom: 20px;
+    bottom: 25px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0,0,0,0);
+    background: rgba(0,0,0,0.8);
     color: white;
-    padding: 30px 54px;
-    border-radius: 30px;
-    font-size: 42px;
+    padding: 14px 22px;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: bold;
     opacity: 0;
     animation: fadeInOut 2s forwards;
+    text-align: center;
   }
 
   @keyframes fadeInOut {
@@ -44,14 +46,13 @@
 <script>
 const STORAGE_KEY = "savedLocation";
 
-// Cancella la posizione
+// Elimina la posizione
 localStorage.removeItem(STORAGE_KEY);
 
-// Opzionale: reindirizza a una pagina neutra dopo 1-1.5 secondi
+// Reindirizza la pagina invisibile dopo 2 secondi
 setTimeout(() => {
-  // Su iOS non si può chiudere automaticamente, quindi facciamo redirect invisibile
   window.location.href = "about:blank";
-}, 1800);
+}, 2000);
 </script>
 
 </body>
