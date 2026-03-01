@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Salva Posizione</title>
+</head>
+<body>
+
+<script>
+const STORAGE_KEY = "savedLocation";
+
+function savePosition() {
+  if (!navigator.geolocation) {
+    alert("Geolocalizzazione non supportata");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition((position) => {
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+
+    const locationData = { lat, lng };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(locationData));
+
+    openMaps(lat, lng);
+  });
+}
+
+function openMaps(lat, lng) {
+  const url = `https://www.google.com/maps?q=${lat},${lng}`;
+  window.location.href = url;
+}
+
+function checkAndOpen() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+
+  if (saved) {
+    const locationData = JSON.parse(saved);
+    openMaps(locationData.lat, locationData.lng);
+  } else {
+    savePosition();
+  }
+}
+
+checkAndOpen();
+</script>
+
+</body>
+</html>
