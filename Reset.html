@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <title>Reset invisibile</title>
+
 <style>
   html, body {
     margin: 0;
     padding: 0;
-    background: transparent; /* sfondo trasparente */
+    background: transparent;
     height: 100%;
     width: 100%;
     font-family: Arial, sans-serif;
     overflow: hidden;
   }
 
-  /* Messaggio leggibile in basso centro */
   .message {
     position: fixed;
     bottom: 25px;
@@ -39,6 +39,7 @@
   }
 </style>
 </head>
+
 <body>
 
 <div class="message">Sei in macchina</div>
@@ -49,16 +50,10 @@ const STORAGE_KEY = "savedLocation";
 // Elimina la posizione
 localStorage.removeItem(STORAGE_KEY);
 
-// Reindirizza la pagina invisibile dopo 2 secondi
+// Dopo 2 secondi torna alla pagina precedente
 setTimeout(() => {
-<head>
-  <meta charset="UTF-8">
-  <title>Ritorno automatico</title>
-</head>
-<body>
-
-<script>
   window.history.back();
+}, 2000);
 </script>
 
 </body>
