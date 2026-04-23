@@ -14,14 +14,17 @@ body {
   color:white;
   font-family:Arial, sans-serif;
   text-align:center;
+  overflow:hidden;
 }
 
+/* testo */
 #text {
   font-size:20px;
   max-width:500px;
   min-height:60px;
 }
 
+/* cursore */
 #text::after {
   content:"|";
   animation:blink 1s infinite;
@@ -31,31 +34,52 @@ body {
   0%,50%,100%{opacity:1;}
   25%,75%{opacity:0;}
 }
+
+/* animazione loading */
+#loader {
+  margin-top:30px;
+  width:40px;
+  height:40px;
+  border:3px solid rgba(255,255,255,0.2);
+  border-top:3px solid white;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  opacity:0;
+  transition:0.3s;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* effetto “fade out” prima del redirect */
+.fade-out {
+  opacity:0;
+  transition:0.8s;
+}
 </style>
 </head>
 
 <body>
 
 <p id="text"></p>
+<div id="loader"></div>
 
 <script>
 const STORAGE_KEY = "savedLocation";
 
-// 🔹 FRASI
-
-// quando salva
 const frasiSalvataggio = [
-  "Posizione Salvata"
+  "Posizione salvata"
 ];
 
-// quando riporta
 const frasiRitorno = [
-  "Ti porto alla macchina"
+  "Ti porto in macchina"
 ];
 
 const target = document.getElementById("text");
+const loader = document.getElementById("loader");
 
-// 🔹 TYPING
+// 🔹 typing
 function typing(text, callback){
   let i = 0;
   target.textContent = "";
@@ -65,49 +89,49 @@ function typing(text, callback){
       target.textContent += text[i++];
       setTimeout(write, 40);
     } else {
-      setTimeout(callback, 1200);
+      setTimeout(callback, 600);
     }
   }
 
   write();
 }
 
-// 🔹 MAPS
+// 🔹 animazione + redirect
 function openMaps(lat,lng){
-  const app = `geo:${lat},${lng}?q=${lat},${lng}`;
-  const web = `https://www.google.com/maps?q=${lat},${lng}`;
+  const url = `https://www.google.com/maps?q=${lat},${lng}`;
 
-  window.location.href = app;
+  loader.style.opacity = "1";
 
-  setTimeout(()=>{
-    window.location.href = web;
-  },1500);
+  setTimeout(() => {
+    document.body.classList.add("fade-out");
+
+    setTimeout(() => {
+      window.location.href = url;
+    }, 800);
+
+  }, 1200);
 }
 
 // 🔹 LOGICA
 function start(){
   const saved = localStorage.getItem(STORAGE_KEY);
 
-  // 🔵 GIÀ SALVATO
   if(saved){
     const loc = JSON.parse(saved);
-    const frase = frasiRitorno[Math.floor(Math.random()*frasiRitorno.length)];
 
-    typing(frase, ()=>{
+    typing(frasiRitorno[0], ()=>{
       openMaps(loc.lat, loc.lng);
     });
-  }
 
-  // 🟢 PRIMA VOLTA
-  else {
-    const frase = frasiSalvataggio[Math.floor(Math.random()*frasiSalvataggio.length)];
+  } else {
 
-    typing(frase, ()=>{
+    typing(frasiSalvataggio[0], ()=>{
       navigator.geolocation.getCurrentPosition(pos=>{
         const lat = pos.coords.latitude;
         const lng = pos.coords.longitude;
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify({lat,lng}));
+
         openMaps(lat,lng);
       });
     });
