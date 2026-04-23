@@ -2,58 +2,83 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Reset invisibile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: transparent;
-    height: 100%;
-    width: 100%;
-    font-family: Arial, sans-serif;
-    overflow: hidden;
-  }
+body {
+  margin:0;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  background:#0d0d0d;
+  color:white;
+  font-family:Arial, sans-serif;
+  text-align:center;
+}
 
-  .message {
-    position: fixed;
-    bottom: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.8);
-    color: white;
-    padding: 14px 22px;
-    border-radius: 12px;
-    font-size: 20px;
-    font-weight: bold;
-    opacity: 0;
-    animation: fadeInOut 2s forwards;
-    text-align: center;
-  }
+#text {
+  font-size:20px;
+  max-width:500px;
+  min-height:60px;
+}
 
-  @keyframes fadeInOut {
-    0% { opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { opacity: 0; }
-  }
+#text::after {
+  content:"|";
+  animation:blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,50%,100%{opacity:1;}
+  25%,75%{opacity:0;}
+}
 </style>
 </head>
 
 <body>
 
-<div class="message">Sei in macchina</div>
+<p id="text"></p>
 
 <script>
 const STORAGE_KEY = "savedLocation";
 
-// Elimina la posizione
-localStorage.removeItem(STORAGE_KEY);
+const frasiReset = [
+  "Sei in macchina"
+];
 
-// Dopo 2 secondi torna alla pagina precedente
-setTimeout(() => {
-  window.history.back();
-}, 2000);
+const target = document.getElementById("text");
+
+// 🔹 TYPING
+function typing(text, callback){
+  let i = 0;
+  target.textContent = "";
+
+  function write(){
+    if(i < text.length){
+      target.textContent += text[i++];
+      setTimeout(write, 40);
+    } else {
+      setTimeout(callback, 800);
+    }
+  }
+
+  write();
+}
+
+// 🔹 RESET
+function resetLocation(){
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+// 🔹 START
+function start(){
+  const frase = frasiReset[Math.floor(Math.random()*frasiReset.length)];
+
+  typing(frase, ()=>{
+    resetLocation();
+  });
+}
+
+start();
 </script>
 
 </body>
