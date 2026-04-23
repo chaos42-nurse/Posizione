@@ -1,48 +1,120 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <title>Salva Posizione</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin:0;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  background:#0d0d0d;
+  color:white;
+  font-family:Arial, sans-serif;
+  text-align:center;
+}
+
+#text {
+  font-size:20px;
+  max-width:500px;
+  min-height:60px;
+}
+
+#text::after {
+  content:"|";
+  animation:blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,50%,100%{opacity:1;}
+  25%,75%{opacity:0;}
+}
+</style>
 </head>
+
 <body>
+
+<p id="text"></p>
 
 <script>
 const STORAGE_KEY = "savedLocation";
 
-function savePosition() {
-  if (!navigator.geolocation) {
-    alert("Geolocalizzazione non supportata");
-    return;
+// 🔹 FRASI
+
+// quando salva
+const frasiSalvataggio = [
+  "Posizione Salvata"
+];
+
+// quando riporta
+const frasiRitorno = [
+  "Ti porto alla macchina"
+];
+
+const target = document.getElementById("text");
+
+// 🔹 TYPING
+function typing(text, callback){
+  let i = 0;
+  target.textContent = "";
+
+  function write(){
+    if(i < text.length){
+      target.textContent += text[i++];
+      setTimeout(write, 40);
+    } else {
+      setTimeout(callback, 1200);
+    }
   }
 
-  navigator.geolocation.getCurrentPosition((position) => {
-    const lat = position.coords.latitude;
-    const lng = position.coords.longitude;
-
-    const locationData = { lat, lng };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(locationData));
-
-    openMaps(lat, lng);
-  });
+  write();
 }
 
-function openMaps(lat, lng) {
-  const url = `https://www.google.com/maps?q=${lat},${lng}`;
-  window.location.href = url;
+// 🔹 MAPS
+function openMaps(lat,lng){
+  const app = `geo:${lat},${lng}?q=${lat},${lng}`;
+  const web = `https://www.google.com/maps?q=${lat},${lng}`;
+
+  window.location.href = app;
+
+  setTimeout(()=>{
+    window.location.href = web;
+  },1500);
 }
 
-function checkAndOpen() {
+// 🔹 LOGICA
+function start(){
   const saved = localStorage.getItem(STORAGE_KEY);
 
-  if (saved) {
-    const locationData = JSON.parse(saved);
-    openMaps(locationData.lat, locationData.lng);
-  } else {
-    savePosition();
+  // 🔵 GIÀ SALVATO
+  if(saved){
+    const loc = JSON.parse(saved);
+    const frase = frasiRitorno[Math.floor(Math.random()*frasiRitorno.length)];
+
+    typing(frase, ()=>{
+      openMaps(loc.lat, loc.lng);
+    });
+  }
+
+  // 🟢 PRIMA VOLTA
+  else {
+    const frase = frasiSalvataggio[Math.floor(Math.random()*frasiSalvataggio.length)];
+
+    typing(frase, ()=>{
+      navigator.geolocation.getCurrentPosition(pos=>{
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({lat,lng}));
+        openMaps(lat,lng);
+      });
+    });
   }
 }
 
-checkAndOpen();
+start();
 </script>
 
 </body>
