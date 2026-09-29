@@ -101,8 +101,9 @@ button:disabled{
   <p id="status">Controllo la posizione salvata…</p>
 
   <div class="buttons">
-    <button id="mainButton">Carica posizione</button>
-    <button id="resetButton" class="secondary">Azzera posizione</button>
+    <button id="saveButton">Salva posizione</button>
+    <button id="showButton">Mostra posizione</button>
+    <button id="resetButton" class="secondary">Reset posizione</button>
   </div>
 
   <div id="loader"></div>
@@ -112,7 +113,8 @@ button:disabled{
 const STORAGE_KEY = "savedLocation";
 
 const status = document.getElementById("status");
-const mainButton = document.getElementById("mainButton");
+const saveButton = document.getElementById("saveButton");
+const showButton = document.getElementById("showButton");
 const resetButton = document.getElementById("resetButton");
 const loader = document.getElementById("loader");
 
@@ -143,15 +145,14 @@ function updateInterface(){
 
   if(saved){
     status.textContent = "Hai una posizione dell'auto salvata.";
-    mainButton.textContent = "Portami in macchina";
   }else{
     status.textContent = "Nessuna posizione salvata.";
-    mainButton.textContent = "Salva posizione";
   }
 }
 
 function setLoading(value){
-  mainButton.disabled = value;
+  saveButton.disabled = value;
+  showButton.disabled = value;
   resetButton.disabled = value;
   loader.style.display = value ? "block" : "none";
 }
@@ -207,13 +208,13 @@ function saveCurrentPosition(){
   );
 }
 
-function mainAction(){
+function showLocation(){
   const saved = getSavedLocation();
 
   if(saved){
     openMaps(saved);
   }else{
-    saveCurrentPosition();
+    status.textContent = "Nessuna posizione salvata.";
   }
 }
 
@@ -223,7 +224,8 @@ function resetLocation(){
   updateInterface();
 }
 
-mainButton.addEventListener("click", mainAction);
+saveButton.addEventListener("click", saveCurrentPosition);
+showButton.addEventListener("click", showLocation);
 resetButton.addEventListener("click", resetLocation);
 
 updateInterface();
