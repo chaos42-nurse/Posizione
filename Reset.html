@@ -2,93 +2,24 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="manifest" href="manifest.webmanifest">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0d0d0d">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
-
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<title>Posizione</title>
 <style>
-body {
-  margin:0;
-  min-height:100vh;
-  display:grid;
-  place-items:center;
-  background:#0d0d0d;
-  color:white;
-  font-family:Arial, sans-serif;
-  text-align:center;
-}
-
-#text {
-  font-size:20px;
-  max-width:500px;
-  min-height:60px;
-}
-
-#text::after {
-  content:"|";
-  animation:blink 1s infinite;
-}
-
-@keyframes blink {
-  0%,50%,100%{opacity:1;}
-  25%,75%{opacity:0;}
-}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0d0d0d;color:#fff;font-family:Arial,sans-serif;text-align:center}
+#text{font-size:20px;max-width:500px;min-height:60px;padding:20px}
+#text::after{content:"|";animation:blink 1s infinite}
+@keyframes blink{0%,50%,100%{opacity:1}25%,75%{opacity:0}}
 </style>
 </head>
-
-<body>
-
-<p id="text"></p>
-
+<body><p id="text"></p>
 <script>
-const STORAGE_KEY = "savedLocation";
-
-const frasiReset = [
-  "Sei in macchina"
-];
-
-const target = document.getElementById("text");
-
-// 🔹 TYPING
-function typing(text, callback){
-  let i = 0;
-  target.textContent = "";
-
-  function write(){
-    if(i < text.length){
-      target.textContent += text[i++];
-      setTimeout(write, 40);
-    } else {
-      setTimeout(callback, 800);
-    }
-  }
-
-  write();
-}
-
-// 🔹 RESET
-function resetLocation(){
-  localStorage.removeItem(STORAGE_KEY);
-}
-
-// 🔹 START
-function start(){
-  const frase = frasiReset[Math.floor(Math.random()*frasiReset.length)];
-
-  typing(frase, ()=>{
-    resetLocation();
-  });
-}
-
-start();
+const KEY="savedLocation",text=document.getElementById("text");
+function typing(s,done){let i=0;text.textContent="";function w(){if(i<s.length){text.textContent+=s[i++];setTimeout(w,40)}else setTimeout(done,800)}w()}
+typing("Sei in macchina",()=>localStorage.removeItem(KEY));
+if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
 </script>
-
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
-}
-</script>
-
 </body>
 </html>
